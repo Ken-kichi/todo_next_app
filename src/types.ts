@@ -24,9 +24,3 @@ export interface LoginFormInputs {
   username: string;
   password: string;
 }
-
-export interface Task {
-  user_id: string;
-  title: string;
-  description: string | null;
-}
