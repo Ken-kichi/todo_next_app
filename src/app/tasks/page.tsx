@@ -2,7 +2,7 @@
 
 import Layout from '@/components/Layout';
 import Spiner from '@/components/Spiner';
-import { Task } from '@/types';
+import { TaskProps } from '@/types';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
@@ -12,7 +12,7 @@ export default function Home() {
   const router = useRouter();
   const token = Cookies.get('token');
   const [loading, setLoading] = useState(true);
-  const [tasks, setTasks] = useState<Task[]>();
+  const [tasks, setTasks] = useState<TaskProps[]>();
 
   useEffect(() => {
     if (!token) {
@@ -34,7 +34,7 @@ export default function Home() {
         if (error.response && error.response.status === 404) {
           setTasks([]);
         } else if (error.response && error.response.status === 401) {
-          router.push('/');
+          router.push('/tasks');
         } else {
           router.push('/login');
         }
@@ -45,9 +45,7 @@ export default function Home() {
   }, [router, token]);
 
   if (loading) {
-    return (
-     <Spiner />
-    );
+    return <Spiner />;
   }
 
   return (
@@ -62,7 +60,7 @@ export default function Home() {
       </div>
 
       {tasks && tasks.length > 0 ? (
-        tasks?.map((task: Task, index: number) => (
+        tasks?.map((task: TaskProps, index: number) => (
           <div key={index} className="bg-white p-6 rounded-lg shadow-md mb-4">
             <h2 className="text-xl font-semibold mb-4 text-gray-700">{task.title}</h2>
             <div className="flex justify-between items-center">

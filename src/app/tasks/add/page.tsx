@@ -1,16 +1,15 @@
 'use client';
 
 import Layout from '@/components/Layout';
-import { Task } from '@/types';
+import { TaskProps } from '@/types';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function AddTaskPage() {
   const router = useRouter();
-  const [checkingAuth, setCheckingAuth] = useState(true);
   const token = Cookies.get('token');
   const {
     register,
@@ -18,17 +17,15 @@ export default function AddTaskPage() {
     formState: { errors },
     setValue,
     reset,
-  } = useForm<Task>();
+  } = useForm<TaskProps>();
 
   useEffect(() => {
     if (!token) {
       router.push('/login');
-    } else {
-      setCheckingAuth(false);
     }
   }, [token, router]);
 
-  const onSubmit = async (data: Task) => {
+  const onSubmit = async (data: TaskProps) => {
     const user = Cookies.get('user') ? JSON.parse(Cookies.get('user') as string) : null;
     const token = Cookies.get('token');
 
@@ -49,7 +46,7 @@ export default function AddTaskPage() {
         withCredentials: true,
       });
       reset();
-      router.push('/');
+      router.push('/tasks');
     } catch (error: any) {
       if (error.response?.status === 401) {
         Cookies.remove('token');

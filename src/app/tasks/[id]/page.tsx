@@ -2,7 +2,7 @@
 
 import Layout from '@/components/Layout';
 import Spiner from '@/components/Spiner';
-import { Task } from '@/types';
+import { TaskProps } from '@/types';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useParams, useRouter } from 'next/navigation';
@@ -14,10 +14,10 @@ export default function DetailTaskPage() {
   const params = useParams();
   const token = Cookies.get('token');
   const [loading, setLoading] = useState(true);
-  const [task, setTask] = useState<Task>();
+  const [task, setTask] = useState<TaskProps>();
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const { register, handleSubmit, watch, setValue } = useForm<Task>();
+  const { register, handleSubmit, watch, setValue } = useForm<TaskProps>();
 
   useEffect(() => {
     if (!token) {
@@ -45,7 +45,7 @@ export default function DetailTaskPage() {
         if (error.response && error.response.status === 404) {
           setTask(undefined);
         } else if (error.response && error.response.status === 401) {
-          router.push('/');
+          router.push('/tasks');
         } else {
           router.push('/login');
         }
@@ -55,7 +55,7 @@ export default function DetailTaskPage() {
       });
   }, [router, token, params, setValue]);
 
-  const onSubmit = async (data: Task) => {
+  const onSubmit = async (data: TaskProps) => {
     const { id } = params;
     try {
       await axios.put(`http://localhost:8000/tasks/${id}`, data, {
@@ -65,7 +65,7 @@ export default function DetailTaskPage() {
         withCredentials: true,
       });
       alert('Successfully updated!');
-      router.push('/');
+      router.push('/tasks');
     } catch (error) {
       console.error('Update failed.', error);
     }
@@ -83,7 +83,7 @@ export default function DetailTaskPage() {
           withCredentials: true,
         });
         alert('Successfully deleted.');
-        router.push('/');
+        router.push('/tasks');
       } catch (error) {
         console.error('Deletion failed.', error);
       }

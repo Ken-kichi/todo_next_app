@@ -1,5 +1,5 @@
 'use client';
-import { LoginFormInputs } from '@/types';
+import { LoginProps } from '@/types';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
@@ -12,10 +12,10 @@ const LoginPage: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormInputs>();
+  } = useForm<LoginProps>();
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  const onSubmit = async (data: LoginFormInputs) => {
+  const onSubmit = async (data: LoginProps) => {
     setLoginError(null);
 
     const formData = new URLSearchParams();

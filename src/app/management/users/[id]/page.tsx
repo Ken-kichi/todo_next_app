@@ -1,7 +1,7 @@
 'use client';
 import Layout from '@/components/Layout';
 import Spiner from '@/components/Spiner';
-import { User } from '@/types';
+import { UserProps } from '@/types';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useParams, useRouter } from 'next/navigation';
@@ -12,12 +12,14 @@ export default function DetailUserPage() {
   const router = useRouter();
   const params = useParams();
   const token = Cookies.get('token');
-  const loginUser: User = Cookies.get('user') ? JSON.parse(Cookies.get('user') as string) : null;
+  const loginUser: UserProps = Cookies.get('user')
+    ? JSON.parse(Cookies.get('user') as string)
+    : null;
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<UserProps>();
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const { register, handleSubmit, setValue } = useForm<User>();
+  const { register, handleSubmit, setValue } = useForm<UserProps>();
 
   useEffect(() => {
     if (!token) {
@@ -26,7 +28,7 @@ export default function DetailUserPage() {
     }
 
     if (!loginUser.is_manager) {
-      router.push('/');
+      router.push('/tasks');
     }
 
     const { id } = params;
@@ -51,7 +53,7 @@ export default function DetailUserPage() {
         if (error.response && error.response.status === 404) {
           setUser(undefined);
         } else if (error.response && error.response.status === 401) {
-          router.push('/');
+          router.push('/tasks');
         } else {
           router.push('/login');
         }
@@ -61,9 +63,9 @@ export default function DetailUserPage() {
       });
   }, [router, token, params, setValue]);
 
-  const onSubmit = async (data: User) => {
+  const onSubmit = async (data: UserProps) => {
     const { id } = params;
-    console.log(data.disabled);
+
     try {
       await axios.put(`http://localhost:8000/users/${id}`, data, {
         headers: {
@@ -90,7 +92,7 @@ export default function DetailUserPage() {
           withCredentials: true,
         });
         alert('Successfully deleted.');
-        router.push('/');
+        router.push('/management');
       } catch (error) {
         console.error('Deletion failed.', error);
       }
@@ -98,9 +100,7 @@ export default function DetailUserPage() {
   };
 
   if (loading) {
-    return (
-      <Spiner />
-    );
+    return <Spiner />;
   }
 
   return (
@@ -190,7 +190,7 @@ export default function DetailUserPage() {
                   General
                 </span>
               )}
-              </h2>
+            </h2>
             <p className="text-gray-700 mb-2">{user?.email}</p>
             <p className="text-gray-700 mb-2">{user?.full_name}</p>
             <p className="text-gray-700 mb-2 mt-4">

@@ -2,7 +2,7 @@
 
 import Layout from '@/components/Layout';
 import Spiner from '@/components/Spiner';
-import { User } from '@/types';
+import { UserProps } from '@/types';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
@@ -11,9 +11,11 @@ import { useEffect, useState } from 'react';
 export default function ManagementPage() {
   const router = useRouter();
   const token = Cookies.get('token');
-  const loginUser: User = Cookies.get('user') ? JSON.parse(Cookies.get('user') as string) : null;
+  const loginUser: UserProps = Cookies.get('user')
+    ? JSON.parse(Cookies.get('user') as string)
+    : null;
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState<User[]>();
+  const [users, setUsers] = useState<UserProps[]>();
 
   useEffect(() => {
     if (!token) {
@@ -22,7 +24,7 @@ export default function ManagementPage() {
     }
 
     if (!loginUser.is_manager) {
-      router.push('/');
+      router.push('/tasks');
     }
 
     axios
@@ -39,7 +41,7 @@ export default function ManagementPage() {
         if (error.response && error.response.status === 404) {
           setUsers([]);
         } else if (error.response && error.response.status === 401) {
-          router.push('/');
+          router.push('/tasks');
         } else {
           router.push('/login');
         }
@@ -50,16 +52,14 @@ export default function ManagementPage() {
   }, [router, token]);
 
   if (loading) {
-    return (
-      <Spiner />
-    );
+    return <Spiner />;
   }
 
   return (
     <Layout>
       <div className="flex justify-end items-center mb-4 mr-6">
         <button
-          onClick={() => router.push('/management/add')}
+          onClick={() => router.push('/management/users/add')}
           className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
         >
           Add
@@ -67,7 +67,7 @@ export default function ManagementPage() {
       </div>
 
       {users && users?.length > 0 ? (
-        users?.map((user: User, index: number) => (
+        users?.map((user: UserProps, index: number) => (
           <div key={index} className="bg-white p-6 rounded-lg shadow-md mb-4">
             <h2 className="text-xl font-semibold mb-4 text-gray-700">
               {user.username}
@@ -95,7 +95,7 @@ export default function ManagementPage() {
               )}
 
               <button
-                onClick={() => router.push(`/management/user/${user.id}`)}
+                onClick={() => router.push(`/management/users/${user.id}`)}
                 className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
               >
                 Detail
