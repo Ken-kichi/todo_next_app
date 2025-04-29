@@ -3,12 +3,13 @@ export interface LayoutProps {
 }
 
 export interface User {
+  id: string;
   username: string;
   email: string;
   full_name: string;
+  is_manager: boolean;
   disabled: boolean;
 }
-
 export interface ContentProps {
   user: User;
 }

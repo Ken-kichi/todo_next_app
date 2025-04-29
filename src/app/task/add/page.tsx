@@ -16,6 +16,7 @@ export default function AddTaskPage() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
     reset,
   } = useForm<Task>();
 
@@ -23,7 +24,7 @@ export default function AddTaskPage() {
     if (!token) {
       router.push('/login');
     } else {
-      setCheckingAuth(false); // トークンあったら表示できる
+      setCheckingAuth(false);
     }
   }, [token, router]);
 
@@ -36,7 +37,8 @@ export default function AddTaskPage() {
       return;
     }
 
-    data['user_id'] = user.id;
+    setValue('user_id', user.id);
+    setValue('completed', false);
 
     try {
       await axios.post('http://localhost:8000/tasks', data, {
@@ -50,12 +52,11 @@ export default function AddTaskPage() {
       router.push('/');
     } catch (error: any) {
       if (error.response?.status === 401) {
-        // トークン切れ → ログイン画面へ
         Cookies.remove('token');
         Cookies.remove('user');
         router.push('/login');
       } else {
-        console.error('タスクの作成に失敗しました:', error);
+        console.error('Failed to create task:', error);
       }
     }
   };
@@ -67,17 +68,17 @@ export default function AddTaskPage() {
           <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Add Task</h2>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="block text-gray-700">タイトル</label>
+              <label className="block text-gray-700">Title</label>
               <input
                 type="text"
-                {...register('title', { required: 'タイトルは必須です' })}
+                {...register('title', { required: 'Title is required.' })}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2 text-gray-700"
               />
               {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
             </div>
 
             <div>
-              <label className="block text-gray-700">説明</label>
+              <label className="block text-gray-700">Description</label>
               <textarea
                 {...register('description')}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2 text-gray-700"
@@ -89,7 +90,7 @@ export default function AddTaskPage() {
                 type="submit"
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
               >
-                作成する
+                Create
               </button>
             </div>
           </form>

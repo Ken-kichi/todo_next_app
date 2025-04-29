@@ -1,22 +1,22 @@
 'use client';
-
 import Layout from '@/components/Layout';
-import { Task } from '@/types';
+import { User } from '@/types';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-export default function DetailTaskPage() {
+export default function DetailUserPage() {
   const router = useRouter();
   const params = useParams();
   const token = Cookies.get('token');
+  const loginUser: User = Cookies.get('user') ? JSON.parse(Cookies.get('user') as string) : null;
   const [loading, setLoading] = useState(true);
-  const [task, setTask] = useState<Task>();
+  const [user, setUser] = useState<User>();
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const { register, handleSubmit, watch, setValue } = useForm<Task>();
+  const { register, handleSubmit, setValue } = useForm<User>();
 
   useEffect(() => {
     if (!token) {
@@ -24,25 +24,31 @@ export default function DetailTaskPage() {
       return;
     }
 
+    if (!loginUser.is_manager) {
+      router.push('/');
+    }
+
     const { id } = params;
 
     axios
-      .get(`http://localhost:8000/tasks/${id}`, {
+      .get(`http://localhost:8000/users/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         withCredentials: true,
       })
       .then((res) => {
-        setTask(res.data);
-        setValue('title', res.data.title);
-        setValue('description', res.data.description);
-        setValue('completed', res.data.completed);
-        setValue('user_id', res.data.user_id);
+        setUser(res.data);
+        setValue('id', res.data.id);
+        setValue('username', res.data.username);
+        setValue('email', res.data.email);
+        setValue('full_name', res.data.full_name);
+        setValue('is_manager', res.data.is_manager);
+        setValue('disabled', res.data.disabled);
       })
       .catch((error) => {
         if (error.response && error.response.status === 404) {
-          setTask(undefined);
+          setUser(undefined);
         } else if (error.response && error.response.status === 401) {
           router.push('/');
         } else {
@@ -54,28 +60,29 @@ export default function DetailTaskPage() {
       });
   }, [router, token, params, setValue]);
 
-  const onSubmit = async (data: Task) => {
+  const onSubmit = async (data: User) => {
     const { id } = params;
+    console.log(data.disabled);
     try {
-      await axios.put(`http://localhost:8000/tasks/${id}`, data, {
+      await axios.put(`http://localhost:8000/users/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         withCredentials: true,
       });
       alert('Successfully updated!');
-      router.push('/');
+      router.push('/management');
     } catch (error) {
       console.error('Update failed.', error);
     }
   };
 
   const onDelete = async () => {
-    const result = confirm('Are you delete this task ?');
+    const result = confirm('Are you delete this user ?');
     if (result) {
       const { id } = params;
       try {
-        await axios.delete(`http://localhost:8000/tasks/${id}`, {
+        await axios.delete(`http://localhost:8000/users/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -101,7 +108,7 @@ export default function DetailTaskPage() {
   return (
     <Layout>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold text-gray-700">Task Details</h1>
+        <h1 className="text-2xl font-bold text-gray-700">User Details</h1>
 
         <label className="inline-flex items-center cursor-pointer">
           <input
@@ -121,32 +128,43 @@ export default function DetailTaskPage() {
         {isEditMode ? (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="block text-gray-700">Title</label>
+              <label className="block text-gray-700">User Name</label>
               <input
-                {...register('title', { required: 'Title is required' })}
+                {...register('username')}
                 type="text"
                 className="mt-1 block w-full border border-gray-300 text-gray-700 rounded-md p-2"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700">Description</label>
-              <textarea
-                {...register('description', { required: 'Description is required' })}
+              <label className="block text-gray-700">E-mail Address</label>
+              <input
+                {...register('email')}
+                type="email"
                 className="mt-1 block w-full border border-gray-300 text-gray-700 rounded-md p-2"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-2">Status</label>
+              <label className="block text-gray-700">Full Name</label>
               <input
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                type="checkbox"
-                {...register('completed')}
+                {...register('full_name')}
+                type="text"
+                className="mt-1 block w-full border border-gray-300 text-gray-700 rounded-md p-2"
               />
             </div>
 
-            <div className="flex justify-end">
+            <div>
+              <label className="block text-gray-700 mb-2">Manager Authority</label>
+              <input type="checkbox" {...register('is_manager')} />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 mb-2">Disable</label>
+              <input type="checkbox" {...register('disabled')} />
+            </div>
+
+            <div className="flex justify-end space-x-2">
               <button
                 type="submit"
                 className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
@@ -157,20 +175,32 @@ export default function DetailTaskPage() {
           </form>
         ) : (
           <>
-            <h2 className="text-xl font-semibold mb-4 text-gray-700">{task?.title}</h2>
-            <p className="text-gray-700 mb-4">{task?.description}</p>
-            <p className="text-gray-700 mb-4">
-              {task?.completed ? (
+            <h2 className="text-xl font-semibold mb-4 text-gray-700">User: {user?.username}</h2>
+            <p className="text-gray-700 mb-2">E-mail: {user?.email}</p>
+            <p className="text-gray-700 mb-2">Full Name: {user?.full_name}</p>
+            <p className="text-gray-700 mb-2">
+              {user?.is_manager ? (
                 <span className="rounded-full bg-green-600 px-3 py-1.5 font-medium text-white">
-                  Completed
+                  Manager
                 </span>
               ) : (
                 <span className="rounded-full bg-red-600 px-3 py-1.5 font-medium text-white">
-                  Incomplete
+                  General
                 </span>
               )}
             </p>
-            <div className="flex justify-end">
+            <p className="text-gray-700 mb-2">
+              {user?.disabled ? (
+                <span className="rounded-full bg-red-600 px-3 py-1.5 font-medium text-white">
+                  Disabled
+                </span>
+              ) : (
+                <span className="rounded-full bg-green-600 px-3 py-1.5 font-medium text-white">
+                  Validity
+                </span>
+              )}
+            </p>
+            <div className="flex justify-end mt-4">
               <button
                 onClick={() => onDelete()}
                 className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"

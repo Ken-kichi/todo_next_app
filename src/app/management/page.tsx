@@ -1,17 +1,18 @@
 'use client';
 
 import Layout from '@/components/Layout';
-import { Task } from '@/types';
+import { User } from '@/types';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function Home() {
+export default function ManagementPage() {
   const router = useRouter();
   const token = Cookies.get('token');
+  const loginUser: User = Cookies.get('user') ? JSON.parse(Cookies.get('user') as string) : null;
   const [loading, setLoading] = useState(true);
-  const [tasks, setTasks] = useState<Task[]>();
+  const [users, setUsers] = useState<User[]>();
 
   useEffect(() => {
     if (!token) {
@@ -19,19 +20,23 @@ export default function Home() {
       return;
     }
 
+    if (!loginUser.is_manager) {
+      router.push('/');
+    }
+
     axios
-      .get('http://localhost:8000/tasks', {
+      .get('http://localhost:8000/users', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         withCredentials: true,
       })
       .then((res) => {
-        setTasks(res.data);
+        setUsers(res.data);
       })
       .catch((error) => {
         if (error.response && error.response.status === 404) {
-          setTasks([]);
+          setUsers([]);
         } else if (error.response && error.response.status === 401) {
           router.push('/');
         } else {
@@ -54,24 +59,36 @@ export default function Home() {
 
   return (
     <Layout>
-      {tasks && tasks.length > 0 ? (
-        tasks?.map((task: Task, index: number) => (
+      {users && users?.length > 0 ? (
+        users?.map((user: User, index: number) => (
           <div key={index} className="bg-white p-6 rounded-lg shadow-md mb-4">
-            <h2 className="text-xl font-semibold mb-4 text-gray-700">{task.title}</h2>
+            <h2 className="text-xl font-semibold mb-4 text-gray-700">
+              {user.username}
+              {user?.is_manager ? (
+                <span className="rounded-full bg-green-600 px-3 py-1.5 font-medium text-white ml-2">
+                  Manager
+                </span>
+              ) : (
+                <span className="rounded-full bg-red-600 px-3 py-1.5 font-medium text-white ml-2">
+                  General
+                </span>
+              )}
+            </h2>
+            <p className="text-gray-700 mb-4">{user.email}</p>
+
             <div className="flex justify-between items-center">
-              <p className="text-gray-700 ">
-                {task?.completed ? (
-                  <span className="rounded-full bg-green-600 px-3 py-1.5 font-medium text-white">
-                    Completed
-                  </span>
-                ) : (
-                  <span className="rounded-full bg-red-600 px-3 py-1.5 font-medium text-white">
-                    Incomplete
-                  </span>
-                )}
-              </p>
+              {user?.disabled ? (
+                <span className="rounded-full bg-red-600 px-3 py-1.5 font-medium text-white">
+                  Disabled
+                </span>
+              ) : (
+                <span className="rounded-full bg-green-600 px-3 py-1.5 font-medium text-white">
+                  Validity
+                </span>
+              )}
+
               <button
-                onClick={() => router.push(`/task/${task.id}`)} // 詳細ページにリダイレクト
+                onClick={() => router.push(`/management/user/${user.id}`)} 
                 className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
               >
                 Detail
@@ -80,7 +97,7 @@ export default function Home() {
           </div>
         ))
       ) : (
-        <p>Task not found</p>
+        <p>User not found</p>
       )}
     </Layout>
   );

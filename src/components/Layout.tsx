@@ -19,7 +19,8 @@ const Layout = ({ children }: LayoutProps) => {
 
   const navigation = [
     { name: 'Todo List', href: '/', current: true },
-    { name: 'Add Todo', href: '/add', current: false },
+    { name: 'Add Todo', href: '/task/add', current: false },
+    { name: 'Management', href: '/management', current: false },
     { name: 'Logout', onClick: onLogout, current: false }, // ここだけonClick
   ];
 
