@@ -107,9 +107,15 @@ export default function DetailUserPage() {
 
   return (
     <Layout>
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold text-gray-700">User Details</h1>
-
+      <div className="flex justify-end items-center mb-4 mr-6">
+        <button
+          onClick={() => router.push('/management/add')}
+          className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
+        >
+          Add
+        </button>
+      </div>
+      <div className="flex items-center justify-end mb-4">
         <label className="inline-flex items-center cursor-pointer">
           <input
             type="checkbox"
@@ -175,21 +181,21 @@ export default function DetailUserPage() {
           </form>
         ) : (
           <>
-            <h2 className="text-xl font-semibold mb-4 text-gray-700">User: {user?.username}</h2>
-            <p className="text-gray-700 mb-2">E-mail: {user?.email}</p>
-            <p className="text-gray-700 mb-2">Full Name: {user?.full_name}</p>
-            <p className="text-gray-700 mb-2">
+            <h2 className="text-xl font-semibold mb-4 text-gray-700">
+              {user?.username}
               {user?.is_manager ? (
-                <span className="rounded-full bg-green-600 px-3 py-1.5 font-medium text-white">
+                <span className="rounded-full bg-green-600 px-3 py-1.5 font-medium text-white ml-2">
                   Manager
                 </span>
               ) : (
-                <span className="rounded-full bg-red-600 px-3 py-1.5 font-medium text-white">
+                <span className="rounded-full bg-red-600 px-3 py-1.5 font-medium text-white ml-2">
                   General
                 </span>
               )}
-            </p>
-            <p className="text-gray-700 mb-2">
+              </h2>
+            <p className="text-gray-700 mb-2">{user?.email}</p>
+            <p className="text-gray-700 mb-2">{user?.full_name}</p>
+            <p className="text-gray-700 mb-2 mt-4">
               {user?.disabled ? (
                 <span className="rounded-full bg-red-600 px-3 py-1.5 font-medium text-white">
                   Disabled

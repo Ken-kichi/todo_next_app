@@ -5,23 +5,18 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 
-const classNames = (...classes: (string | false | null | undefined)[]): string => {
-  return classes.filter(Boolean).join(' ');
-};
-
 const Layout = ({ children }: LayoutProps) => {
   const router = useRouter();
 
   const onLogout = () => {
-    Cookies.remove('token'); // トークン削除
-    router.push('/login'); // ログインページへリダイレクト
+    Cookies.remove('token');
+    router.push('/login');
   };
 
   const navigation = [
-    { name: 'Todo List', href: '/', current: true },
-    { name: 'Add Todo', href: '/task/add', current: false },
-    { name: 'Management', href: '/management', current: false },
-    { name: 'Logout', onClick: onLogout, current: false }, // ここだけonClick
+    { name: 'Todo List', href: '/tasks' },
+    { name: 'Management', href: '/management' },
+    { name: 'Logout', onClick: onLogout }, // ここだけonClick
   ];
 
   return (
@@ -38,12 +33,9 @@ const Layout = ({ children }: LayoutProps) => {
                       <button
                         key={item.name}
                         onClick={item.onClick}
-                        className={classNames(
-                          item.current
-                            ? 'bg-gray-900 text-white'
-                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'rounded-md px-3 py-2 text-sm font-medium'
-                        )}
+                        className={
+                          'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium'
+                        }
                       >
                         {item.name}
                       </button>
@@ -51,13 +43,10 @@ const Layout = ({ children }: LayoutProps) => {
                       <a
                         key={item.name}
                         href={item.href}
-                        aria-current={item.current ? 'page' : undefined}
-                        className={classNames(
-                          item.current
-                            ? 'bg-gray-900 text-white'
-                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'rounded-md px-3 py-2 text-sm font-medium'
-                        )}
+                        aria-current={'page'}
+                        className={
+                          'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium'
+                        }
                       >
                         {item.name}
                       </a>
@@ -78,12 +67,9 @@ const Layout = ({ children }: LayoutProps) => {
                   key={item.name}
                   as="button"
                   onClick={item.onClick}
-                  className={classNames(
-                    item.current
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block rounded-md px-3 py-2 text-base font-medium'
-                  )}
+                  className={
+                    'text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'
+                  }
                 >
                   {item.name}
                 </DisclosureButton>
@@ -92,12 +78,9 @@ const Layout = ({ children }: LayoutProps) => {
                   key={item.name}
                   as="a"
                   href={item.href}
-                  className={classNames(
-                    item.current
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block rounded-md px-3 py-2 text-base font-medium'
-                  )}
+                  className={
+                    'text-gray-300 hover:bg-gray-700 hover:text-whiteblock rounded-md px-3 py-2 text-base font-medium'
+                  }
                 >
                   {item.name}
                 </DisclosureButton>

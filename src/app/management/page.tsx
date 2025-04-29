@@ -59,6 +59,15 @@ export default function ManagementPage() {
 
   return (
     <Layout>
+      <div className="flex justify-end items-center mb-4 mr-6">
+        <button
+          onClick={() => router.push('/management/add')}
+          className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
+        >
+          Add
+        </button>
+      </div>
+
       {users && users?.length > 0 ? (
         users?.map((user: User, index: number) => (
           <div key={index} className="bg-white p-6 rounded-lg shadow-md mb-4">
@@ -88,7 +97,7 @@ export default function ManagementPage() {
               )}
 
               <button
-                onClick={() => router.push(`/management/user/${user.id}`)} 
+                onClick={() => router.push(`/management/user/${user.id}`)}
                 className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
               >
                 Detail

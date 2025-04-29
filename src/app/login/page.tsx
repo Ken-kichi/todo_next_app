@@ -43,7 +43,7 @@ const LoginPage: React.FC = () => {
           sameSite: 'strict',
         });
 
-        router.push('/');
+        router.push('/tasks');
       }
     } catch (err) {
       setLoginError('Login failed. Incorrect user name or password.');

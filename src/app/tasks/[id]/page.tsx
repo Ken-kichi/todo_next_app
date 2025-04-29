@@ -100,8 +100,15 @@ export default function DetailTaskPage() {
 
   return (
     <Layout>
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold text-gray-700">Task Details</h1>
+      <div className="flex justify-end items-center mb-4 mr-6">
+        <button
+          onClick={() => router.push('/tasks')}
+          className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
+        >
+          List
+        </button>
+      </div>
+      <div className="flex items-center justify-end mb-4">
 
         <label className="inline-flex items-center cursor-pointer">
           <input

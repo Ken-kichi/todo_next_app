@@ -63,6 +63,15 @@ export default function AddTaskPage() {
 
   return (
     <Layout>
+      <div className="flex justify-end items-center mb-4 mr-6">
+        <button
+          onClick={() => router.push('/tasks')}
+          className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
+        >
+          List
+        </button>
+      </div>
+
       <div className="flex justify-center items-center min-h-scree">
         <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
           <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Add Task</h2>

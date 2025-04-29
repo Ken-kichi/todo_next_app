@@ -54,6 +54,15 @@ export default function Home() {
 
   return (
     <Layout>
+      <div className="flex justify-end items-center mb-4 mr-6">
+        <button
+          onClick={() => router.push('tasks/add')}
+          className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
+        >
+          Add
+        </button>
+      </div>
+
       {tasks && tasks.length > 0 ? (
         tasks?.map((task: Task, index: number) => (
           <div key={index} className="bg-white p-6 rounded-lg shadow-md mb-4">
@@ -71,7 +80,7 @@ export default function Home() {
                 )}
               </p>
               <button
-                onClick={() => router.push(`/task/${task.id}`)} // 詳細ページにリダイレクト
+                onClick={() => router.push(`/tasks/${task.id}`)} // 詳細ページにリダイレクト
                 className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
               >
                 Detail
