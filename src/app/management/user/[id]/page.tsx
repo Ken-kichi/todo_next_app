@@ -1,5 +1,6 @@
 'use client';
 import Layout from '@/components/Layout';
+import Spiner from '@/components/Spiner';
 import { User } from '@/types';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -98,10 +99,7 @@ export default function DetailUserPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen space-y-4">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"></div>
-        <p className="text-gray-500 text-lg">Leading...</p>
-      </div>
+      <Spiner />
     );
   }
 
