@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function AddTaskPage() {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   const router = useRouter();
   const token = Cookies.get('token');
   const {
@@ -38,7 +39,7 @@ export default function AddTaskPage() {
     setValue('completed', false);
 
     try {
-      await axios.post('http://localhost:8000/tasks', data, {
+      await axios.post(`${API_BASE_URL}/tasks`, data, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,

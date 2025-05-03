@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function DetailUserPage() {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   const router = useRouter();
   const params = useParams();
   const token = Cookies.get('token');
@@ -34,7 +35,7 @@ export default function DetailUserPage() {
     const { id } = params;
 
     axios
-      .get(`http://localhost:8000/users/${id}`, {
+      .get(`${API_BASE_URL}/users/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -67,7 +68,7 @@ export default function DetailUserPage() {
     const { id } = params;
 
     try {
-      await axios.put(`http://localhost:8000/users/${id}`, data, {
+      await axios.put(`${API_BASE_URL}/users/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -85,7 +86,7 @@ export default function DetailUserPage() {
     if (result) {
       const { id } = params;
       try {
-        await axios.delete(`http://localhost:8000/users/${id}`, {
+        await axios.delete(`${API_BASE_URL}/users/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

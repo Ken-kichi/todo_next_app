@@ -47,7 +47,7 @@ export default function AddUserPage() {
     const { confirmPassword, ...userData } = data;
 
     try {
-      await axios.post('http://localhost:8000/users', userData, {
+      await axios.post(`/users`, userData, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,

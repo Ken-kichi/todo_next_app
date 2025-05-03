@@ -5,7 +5,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 
-const Layout = ({ children }: LayoutProps) => {
+export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
 
   const onLogout = () => {
@@ -95,6 +95,4 @@ const Layout = ({ children }: LayoutProps) => {
       </main>
     </div>
   );
-};
-
-export default Layout;
+}

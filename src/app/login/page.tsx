@@ -3,10 +3,11 @@ import { LoginProps } from '@/types';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-const LoginPage: React.FC = () => {
+export default function LoginPage() {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   const router = useRouter();
   const {
     register,
@@ -23,7 +24,7 @@ const LoginPage: React.FC = () => {
     formData.append('password', data.password);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/auth/token', formData, {
+      const response = await axios.post(`${API_BASE_URL}/auth/token`, formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -103,6 +104,4 @@ const LoginPage: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default LoginPage;
+}

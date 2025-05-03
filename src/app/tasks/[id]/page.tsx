@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function DetailTaskPage() {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   const router = useRouter();
   const params = useParams();
   const token = Cookies.get('token');
@@ -28,7 +29,7 @@ export default function DetailTaskPage() {
     const { id } = params;
 
     axios
-      .get(`http://localhost:8000/tasks/${id}`, {
+      .get(`${API_BASE_URL}/tasks/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -58,7 +59,7 @@ export default function DetailTaskPage() {
   const onSubmit = async (data: TaskProps) => {
     const { id } = params;
     try {
-      await axios.put(`http://localhost:8000/tasks/${id}`, data, {
+      await axios.put(`${}tasks/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -76,7 +77,7 @@ export default function DetailTaskPage() {
     if (result) {
       const { id } = params;
       try {
-        await axios.delete(`http://localhost:8000/tasks/${id}`, {
+        await axios.delete(`${API_BASE_URL}/tasks/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

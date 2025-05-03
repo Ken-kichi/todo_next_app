@@ -21,7 +21,7 @@ export default function Home() {
     }
 
     axios
-      .get('http://localhost:8000/tasks', {
+      .get(`${}/tasks`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
