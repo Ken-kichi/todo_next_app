@@ -2,7 +2,7 @@
 
 import Layout from '@/components/Layout';
 import Spiner from '@/components/Spiner';
-import { UserProps } from '@/types';
+import { UserListProps } from '@/types';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
@@ -12,11 +12,11 @@ export default function ManagementPage() {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   const router = useRouter();
   const token = Cookies.get('token');
-  const loginUser: UserProps = Cookies.get('user')
+  const loginUser: UserListProps = Cookies.get('user')
     ? JSON.parse(Cookies.get('user') as string)
     : null;
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState<UserProps[]>();
+  const [users, setUsers] = useState<UserListProps[]>();
 
   useEffect(() => {
     if (!token) {
@@ -68,7 +68,7 @@ export default function ManagementPage() {
       </div>
 
       {users && users?.length > 0 ? (
-        users?.map((user: UserProps, index: number) => (
+        users?.map((user: UserListProps, index: number) => (
           <div key={index} className="bg-white p-6 rounded-lg shadow-md mb-4">
             <h2 className="text-xl font-semibold mb-4 text-gray-700">
               {user.username}

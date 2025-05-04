@@ -10,6 +10,10 @@ export interface UserProps {
   disabled: boolean;
 }
 
+export interface UserListProps extends UserProps {
+  id: string;
+}
+
 export interface UserAddProps extends UserProps {
   password: string;
   confirmPassword: string;
