@@ -59,7 +59,7 @@ export default function DetailTaskPage() {
   const onSubmit = async (data: TaskProps) => {
     const { id } = params;
     try {
-      await axios.put(`${}tasks/${id}`, data, {
+      await axios.put(`${API_BASE_URL}tasks/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
