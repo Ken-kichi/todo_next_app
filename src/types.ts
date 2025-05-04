@@ -25,6 +25,10 @@ export interface TaskProps {
   completed: boolean;
 }
 
+export interface TaskListProps extends TaskProps {
+  id: string;
+}
+
 export interface LoginProps {
   username: string;
   password: string;
