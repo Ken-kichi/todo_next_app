@@ -1,7 +1,7 @@
 'use client';
 import Layout from '@/components/Layout';
 import Spiner from '@/components/Spiner';
-import { UserProps } from '@/types';
+import { UserListProps } from '@/types';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useParams, useRouter } from 'next/navigation';
@@ -13,14 +13,14 @@ export default function DetailUserPage() {
   const router = useRouter();
   const params = useParams();
   const token = Cookies.get('token');
-  const loginUser: UserProps = Cookies.get('user')
+  const loginUser: UserListProps = Cookies.get('user')
     ? JSON.parse(Cookies.get('user') as string)
     : null;
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<UserProps>();
+  const [user, setUser] = useState<UserListProps>();
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const { register, handleSubmit, setValue } = useForm<UserProps>();
+  const { register, handleSubmit, setValue } = useForm<UserListProps>();
 
   useEffect(() => {
     if (!token) {
@@ -64,7 +64,7 @@ export default function DetailUserPage() {
       });
   }, [router, token, params, setValue, API_BASE_URL, loginUser.is_manager]);
 
-  const onSubmit = async (data: UserProps) => {
+  const onSubmit = async (data: UserListProps) => {
     const { id } = params;
 
     try {
