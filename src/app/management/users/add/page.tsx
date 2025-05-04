@@ -44,7 +44,14 @@ export default function AddUserPage() {
 
     setValue('disabled', false);
 
-    const { confirmPassword, ...userData } = data;
+    const userData = {
+      username: data.username,
+      email: data.email,
+      full_name: data.full_name,
+      is_manager: data.is_manager,
+      disabled: data.disabled,
+      password: data.password,
+    };
 
     try {
       await axios.post(`/users`, userData, {
@@ -56,8 +63,8 @@ export default function AddUserPage() {
       });
       reset();
       router.push('/management');
-    } catch (error: any) {
-      if (error.response?.status === 401) {
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
         Cookies.remove('token');
         Cookies.remove('user');
         router.push('/login');

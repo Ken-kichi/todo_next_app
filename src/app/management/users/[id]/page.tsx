@@ -62,7 +62,7 @@ export default function DetailUserPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, [router, token, params, setValue]);
+  }, [router, token, params, setValue, API_BASE_URL, loginUser.is_manager]);
 
   const onSubmit = async (data: UserProps) => {
     const { id } = params;

@@ -50,7 +50,7 @@ export default function ManagementPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, [router, token]);
+  }, [router, token, API_BASE_URL, loginUser?.is_manager]);
 
   if (loading) {
     return <Spiner />;

@@ -18,7 +18,7 @@ export default function DetailTaskPage() {
   const [task, setTask] = useState<TaskProps>();
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const { register, handleSubmit, watch, setValue } = useForm<TaskProps>();
+  const { register, handleSubmit,  setValue } = useForm<TaskProps>();
 
   useEffect(() => {
     if (!token) {
@@ -54,7 +54,7 @@ export default function DetailTaskPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, [router, token, params, setValue]);
+  }, [router, token, params, setValue,API_BASE_URL]);
 
   const onSubmit = async (data: TaskProps) => {
     const { id } = params;

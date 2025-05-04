@@ -46,7 +46,7 @@ export default function LoginPage() {
 
         router.push('/tasks');
       }
-    } catch (err) {
+    } catch {
       setLoginError('Login failed. Incorrect user name or password.');
     }
   };

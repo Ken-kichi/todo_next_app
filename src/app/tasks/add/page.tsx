@@ -48,8 +48,8 @@ export default function AddTaskPage() {
       });
       reset();
       router.push('/tasks');
-    } catch (error: any) {
-      if (error.response?.status === 401) {
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
         Cookies.remove('token');
         Cookies.remove('user');
         router.push('/login');

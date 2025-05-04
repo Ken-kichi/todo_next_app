@@ -43,7 +43,7 @@ export default function Home() {
       .finally(() => {
         setLoading(false);
       });
-  }, [router, token]);
+  }, [router, token,API_BASE_URL]);
 
   if (loading) {
     return <Spiner />;
